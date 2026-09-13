@@ -179,7 +179,7 @@ BEGIN
           AND user_id = auth.uid()
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 CREATE OR REPLACE FUNCTION public.is_org_admin(org_id UUID)
 RETURNS BOOLEAN AS $$
@@ -191,7 +191,7 @@ BEGIN
           AND role IN ('owner', 'admin')
     );
 END;
-$$ LANGUAGE plpgsql SECURITY DEFINER;
+$$ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public;
 
 -- ==============================================================================
 -- 14. POLICIES DE RLS
@@ -211,7 +211,7 @@ DROP POLICY IF EXISTS "Membros podem visualizar suas organizações" ON public.o
 CREATE POLICY "Membros podem visualizar suas organizações" 
 ON public.organizations FOR SELECT 
 USING (
-    id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid())
+    public.is_org_member(id)
     OR true -- Permite resolver o slug público no agendamento online
 );
 
@@ -228,13 +228,17 @@ DROP POLICY IF EXISTS "Membros podem visualizar outros membros de suas organiza�
 CREATE POLICY "Membros podem visualizar outros membros de suas organizações" 
 ON public.organization_members FOR SELECT 
 USING (
-    organization_id IN (SELECT organization_id FROM public.organization_members WHERE user_id = auth.uid())
+    user_id = auth.uid()
+    OR public.is_org_member(organization_id)
 );
 
 DROP POLICY IF EXISTS "Admins e Owners podem gerenciar membros" ON public.organization_members;
 CREATE POLICY "Admins e Owners podem gerenciar membros"
 ON public.organization_members FOR INSERT TO authenticated
-WITH CHECK (public.is_org_admin(organization_id) OR (user_id = auth.uid() AND role = 'owner'));
+WITH CHECK (
+    (user_id = auth.uid() AND role = 'owner')
+    OR public.is_org_admin(organization_id)
+);
 
 DROP POLICY IF EXISTS "Admins e Owners podem atualizar papéis de membros" ON public.organization_members;
 CREATE POLICY "Admins e Owners podem atualizar papéis de membros"
