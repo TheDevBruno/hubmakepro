@@ -1,24 +1,24 @@
-# Project State: Hub MakePro (Beauty SaaS OS)
+# STATE: Hub MakePro (Beauty & Esthetics SaaS)
 
-## Project Reference
+## Active Milestone: v1.1 — Refinamento Operacional, Edição Dinâmica & Performance
 
-See: [.planning/PROJECT.md](file:///z:/DevOps%20-%20FullStack/Hub%20MakePro/.planning/PROJECT.md)
-
-**Core value:** Transformar a operação de profissionais da beleza e salões através de agendamento simplificado, controle de caixa, cálculo automático de comissões e relacionamento com clientes.  
-**Current focus:** Marco v1.0 Concluído e Arquivado. Pronto para a v2.0.
-
----
-
-## Current Position
-
-- **Milestone:** v1.0 Shipped ([v1.0-ROADMAP.md](file:///z:/DevOps%20-%20FullStack/Hub%20MakePro/.planning/milestones/v1.0-ROADMAP.md))
-- **Status:** Milestone Complete & Tagged
-- **Total Plans Completed:** 7 plans across 7 phases
-- **Progress:** [██████████] 100%
+### Status Atual
+- **Marco Ativo:** `v1.1`
+- **Fase Atual:** `Phase 8` (Performance, Skeletons & Navegação Instantânea)
+- **Status da Fase:** Não iniciada (Pronta para `/gsd-plan-phase 8`)
 
 ---
 
-## Session Continuity
-- **Last session:** 2026-09-13
-- **Stopped at:** Arquivamento oficial do Milestone v1.0 Beauty Core Release
-- **Resume file:** None
+## Fases do Marco v1.1
+- [ ] **Phase 8:** Performance, Skeletons & Navegação Instantânea
+- [ ] **Phase 9:** Configurações Completas do Salão / Organização
+- [ ] **Phase 10:** Gestão Avançada de Especialistas & Horários Individuais
+- [ ] **Phase 11:** Ficha de Clientes com Histórico 360° & Anamnese Viva
+- [ ] **Phase 12:** Agenda Operacional Dinâmica (Reagendamento & Modais nos Cards)
+
+---
+
+## Quality Gate Status
+- **Testes Unitários:** 19/19 aprovados (`vitest run`)
+- **TypeScript:** Rigoroso sem `any` implícito
+- **Banco de Dados:** Supabase Online sincronizado com 10 tabelas e RLS ativo

@@ -1,48 +1,41 @@
-# Requirements: Hub MakePro (Beauty & Esthetics SaaS)
+# REQUISITOS DO MARCO v1.1 — Refinamento Operacional, Edição Dinâmica & Performance
 
-**Defined:** 2026-09-13  
-**Milestone:** v1.0 Beauty Core Release  
-**Core Value:** Gestão completa e agendamento para Salões, Maquiadoras, Lash e Nail Designers.
-
----
-
-## v1 Requirements (Beleza & Estética)
-
-### 0. Segmentação & Especialização por Tipo de Espaço
-- [x] **BEAUTY-00**: Tenant pode definir seus segmentos de atuação (`Cabelo/Cabeleireira`, `Maquiagem/Make`, `Cílios/Lash`, `Unhas/Nail`, `Estética/Sobrancelhas`, `Salão Completo`), habilitando dinamicamente:
-  - Fichas de anamnese personalizadas (ex: teste de mecha e colorimetria para cabelo, curvatura/mapeamento para lash, estilo e alergias para make, formato e cuticulagem para nails).
-  - Categorias pré-configuradas e vocabulário contextual da interface.
-
-### 1. Catálogo de Serviços & Categorias
-- [x] **BEAUTY-01**: Salão/Profissional pode cadastrar, editar e desativar serviços com nome, duração (minutos), preço (R$) e categoria (`Maquiagem`, `Cílios / Lash`, `Unhas / Nail`, `Cabelo`, `Estética / Sobrancelhas`).
-
-### 2. Gestão de Especialistas & Horários de Trabalho
-- [x] **BEAUTY-02**: Cadastro de profissionais vinculados à organização, definindo quais serviços realizam, dias e horários de atendimento e percentual de comissão (%).
-
-### 3. Agenda Operacional & Agendamentos
-- [x] **BEAUTY-03**: Calendário de agendamentos com filtros por data, profissional e status (`Pendente`, `Confirmado`, `Em Atendimento`, `Concluído`, `Cancelado`).
-- [x] **BEAUTY-04**: Criação manual de agendamento na recepção/pelo profissional com seleção de cliente, serviço, profissional, data/hora e observações.
-
-### 4. Gestão de Clientes & Ficha Técnica
-- [x] **BEAUTY-05**: Cadastro de clientes (Nome, WhatsApp, Data de Nascimento) com histórico completo de atendimentos anteriores e anotações técnicas (ex: curvatura do cílio, tonalidade da base, formato da unha).
-
-### 5. Página Pública de Agendamento Online
-- [x] **BEAUTY-06**: Página pública em `/book/[slug]` onde os clientes podem escolher serviço, profissional e horário livre sem precisar de login, gerando link direto para confirmação no WhatsApp.
-
-### 6. Financeiro & Comissões
-- [x] **BEAUTY-07**: Registro de recebimentos por comanda (Dinheiro, Pix, Cartão de Débito/Crédito) e relatório resumido de faturamento e comissões a pagar por profissional.
+## Visão Geral do Marco
+O Milestone v1.1 tem como objetivo elevar a maturidade operacional do **Hub MakePro** para suportar a rotina real dos salões e profissionais de estética. Foco em edição completa em modais, visão 360° de clientes, horários individuais de equipe, configurações detalhadas do espaço e navegação instantânea com zero atraso percebido.
 
 ---
 
-## Traceability
+## 1. Configurações Avançadas da Organização (ORG-EXP)
+- [ ] **ORG-EXP-01**: Suporte completo a dados de contato do espaço (WhatsApp comercial, telefone fixo, e-mail e Instagram).
+- [ ] **ORG-EXP-02**: Grade de horários de funcionamento semanais (segunda a domingo, horário de abertura, fechamento e intervalos).
+- [ ] **ORG-EXP-03**: Endereço físico completo com link para rotas (Google Maps) e políticas do espaço (tolerância a atrasos).
+- [ ] **ORG-EXP-04**: Ativação granular de nichos de atuação (Make, Lash, Nails, Cabelo, Sobrancelhas, Estética).
 
-| Requirement | Phase / Sprint | Status |
-|-------------|----------------|--------|
-| BEAUTY-00 | Phase 4 (Sprint 004: Segmentação, Serviços & Especialistas) | Completed |
-| BEAUTY-01 | Phase 4 (Sprint 004: Segmentação, Serviços & Especialistas) | Completed |
-| BEAUTY-02 | Phase 4 (Sprint 004: Segmentação, Serviços & Especialistas) | Completed |
-| BEAUTY-03 | Phase 5 (Sprint 005: Agenda, Ficha de Anamnese & Clientes) | Completed |
-| BEAUTY-04 | Phase 5 (Sprint 005: Agenda, Ficha de Anamnese & Clientes) | Completed |
-| BEAUTY-05 | Phase 5 (Sprint 005: Agenda, Ficha de Anamnese & Clientes) | Completed |
-| BEAUTY-06 | Phase 6 (Sprint 006: Agendamento Público Online) | Completed |
-| BEAUTY-07 | Phase 7 (Sprint 007: Caixa & Comissões) | Completed |
+---
+
+## 2. Gestão Detalhada de Especialistas & Equipe (SPEC-EXP)
+- [ ] **SPEC-EXP-01**: Grade de horários de atendimento individual por profissional (dias da semana e turnos disponíveis).
+- [ ] **SPEC-EXP-02**: Vínculo direto e filtro de serviços que cada especialista está apto a realizar.
+- [ ] **SPEC-EXP-03**: Modal de edição rápida de especialistas (contato, comissão %, avatar e especialidades).
+
+---
+
+## 3. Prontuário de Clientes & Histórico 360° (CLI-EXP)
+- [ ] **CLI-EXP-01**: Ficha cadastral ampliada com dados completos de contato, canal preferido e endereço.
+- [ ] **CLI-EXP-02**: Linha do tempo (Timeline 360°) com todos os agendamentos anteriores da cliente, valores, profissional responsável e status.
+- [ ] **CLI-EXP-03**: Modal de edição da ficha de anamnese técnica (mapping lash, formato nails, tipo de pele, alergias).
+
+---
+
+## 4. Agenda Dinâmica & Modais de Interação (APT-EXP)
+- [ ] **APT-EXP-01**: Abertura de modal completo ao clicar em qualquer card de agendamento na grade.
+- [ ] **APT-EXP-02**: Reagendamento de horários (alteração de data e horário de início/término) com recálculo automático.
+- [ ] **APT-EXP-03**: Alteração dinâmica do especialista responsável e/ou do serviço selecionado.
+- [ ] **APT-EXP-04**: Disparo de mensagem no WhatsApp formatada para avisos de reagendamento/cancelamento.
+
+---
+
+## 5. Performance, Prefetching & UX Instantânea (PERF-UX)
+- [ ] **PERF-UX-01**: Implementação de `loading.tsx` com Skeletons modernos no App Router para todas as rotas operacionais (`/appointments`, `/clients`, `/services`, `/specialists`, `/financial`, `/settings/organization`).
+- [ ] **PERF-UX-02**: Prefetching inteligente e otimização de Server Components para transição imediata de páginas na Sidebar.
+- [ ] **PERF-UX-03**: Feedback visual instantâneo (optimistic updates ou toast/indicators) em todas as ações de formulário.
