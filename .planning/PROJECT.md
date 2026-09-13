@@ -1,35 +1,55 @@
-# Hub MakePro (Beauty & Esthetics SaaS)
+# Hub MakePro (Beauty & Esthetics SaaS OS)
 
 ## What This Is
-**Hub MakePro** é uma plataforma SaaS profissional para Salões de Beleza, Maquiadoras, Lash Designers, Nail Designers, Cabeleireiras e Clínicas de Estética.
+**Hub MakePro** é uma plataforma SaaS vertical projetada especificamente para o segmento de beleza, estética e cuidados pessoais — atendendo **Salões de Beleza, Maquiadoras Profissionais, Lash Designers, Nail Designers, Clínicas de Estética e Barbeiros/Profissionais Autônomos**. A plataforma centraliza agendamentos online, controle financeiro, histórico de clientes, comissões de profissionais e catálogo de serviços por tenant.
 
 ## Core Value
-Garantir operação, agendamento online 24h sem fricção, prontuário de clientes/anamnese, controle de caixa e apuração de comissões em ambiente em nuvem seguro, rápido e auditável.
+Transformar a operação de profissionais da beleza e salões através de agendamento simplificado (com página pública por profissional/salão), controle de caixa, cálculo automático de comissões e relacionamento com clientes em uma experiência multi-tenant moderna, fluida e 100% em português (`pt-BR`).
 
-## Milestone Ativo: **v1.1 Deploy, Hospedagem Online & Validação Prática em Produção**
+## Target Verticals (Segmentos Atendidos)
+1. **Salões de Beleza & Clínicas de Estética** (Multi-profissionais, salas, comissões e gestão central)
+2. **Maquiadoras Profissionais** (Agendamentos de noivas/eventos, ficha de anamnese e portfólio)
+3. **Lash Designers** (Extensão de cílios, fichas de aplicação, manutenção periódica e alertas)
+4. **Nail Designers** (Esmaltação em gel, fibra de vidro, manutenção e pacotes)
+5. **Estética Facial e Corporal** (Procedimentos, pacotes de sessões e controle de retornos)
 
-### Objetivos do Marco v1.1
-1. **GitHub Versioning & CI/CD:** Sincronização completa do repositório no GitHub com GitHub Actions configurado para typecheck, lint e build.
-2. **Supabase Cloud (Backend Online):** Provisionamento do banco PostgreSQL em nuvem, execução das 5 migrations, configuração do Supabase Auth e políticas RLS em produção.
-3. **Vercel Cloud (Frontend Online):** Deploy do Next.js 15 na Vercel com injeção segura das variáveis de ambiente (`NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`).
-4. **Plano de Testes & Validação Prática:** Execução de suíte de testes de ponta a ponta (E2E) simulando o fluxo real: Cadastro do Salão → Cadastro de Serviços/Especialistas → Agendamento Público (`/book/[slug]`) → Notificação no WhatsApp → Fechamento de Caixa & Comissões.
-5. **Caderno de Auditoria & Feedback Operacional:** Registro de observações, ajustes de usabilidade e débitos técnicos para os próximos ciclos.
+## Requirements (Milestone v1.0 — Beauty SaaS Core)
 
----
-
-## Requirements (Milestone v1.1 — Deploy & Prática)
+### Validated (v1.0 Beauty Core Shipped & Audited)
+- [x] **AUTH-01..05**: Autenticação com Supabase Auth e suporte SSR seguro com cookies HTTPOnly
+- [x] **TENANT-01..04**: Multi-tenancy isolado (Salão/Espaço), alternador de organização e papéis RBAC
+- [x] **DB-01..03**: PostgreSQL gerenciado com Migrations versionadas e Row Level Security (RLS)
+- [x] **UI-01..03**: Interface moderna em Next.js 15, Tailwind CSS e 100% em `pt-BR`
+- [x] **BEAUTY-00**: Especialização por Nicho / Tipo de Espaço (Make, Lash, Nails, Cabelo, Estética)
+- [x] **BEAUTY-01**: Gestão de Catálogo de Serviços com durações em minutos e preços em BRL
+- [x] **BEAUTY-02**: Cadastro e Gestão de Especialistas com taxas de comissão (%)
+- [x] **BEAUTY-03**: Agenda Operacional com filtros por data, profissional e status
+- [x] **BEAUTY-04**: Marcação de horários com cálculo automático de término do procedimento
+- [x] **BEAUTY-05**: Cadastro de Clientes e Histórico com Ficha de Anamnese especializada
+- [x] **BEAUTY-06**: Página Pública de Agendamento Online (`/book/[slug]`) e integração com WhatsApp
+- [x] **BEAUTY-07**: Fluxo de Caixa, Comandas e Fechamento de Comissões por Profissional
 
 ### Active
-- [ ] **DEPLOY-01**: **Versionamento e GitHub:** Configuração de repositório remoto, git commit limpo e branch `main`.
-- [ ] **DEPLOY-02**: **Supabase Cloud Backend:** Configuração do projeto online no Supabase e aplicação das migrations (`001` a `005`).
-- [ ] **DEPLOY-03**: **Vercel Cloud Frontend:** Deploy e configuração de domínio/HTTPS na Vercel com conexão segura ao Supabase.
-- [ ] **DEPLOY-04**: **Plano de Testes & Validação E2E:** Roteiro estruturado de testes cobrindo toda a jornada do usuário e cliente final no ambiente online.
-- [ ] **DEPLOY-05**: **Registro de Ajustes & Refinamentos:** Documento `FEEDBACK_LOG.md` para melhorias identificadas durante os testes práticos.
+(Nenhum no momento — Marco v1.0 Beauty Core 100% Concluído e Auditado)
 
----
+### Out of Scope (v1.0 Beauty Core)
+- Envio de WhatsApp automatizado via API oficial da Meta (integração direta via deep link wa.me na v1.0, planejado para v2.0)
+- Módulo de controle de estoque avançado de insumos químicos (Sprint futura)
+- Gateway de pagamento online embutido no agendamento público (Pix direto/na recepção na v1.0)
+
+## Context
+- **Metodologia:** SaaS Development OS v1.0 (GSD + Governança Estrita).
+- **Papéis:** Gemini Pro (Agente Executor no Antigravity) e ChatGPT (Agente Revisor/Orquestrador).
+- **Fonte da Verdade:** `docs/PROJECT_STATE.md` e `.planning/STATE.md`.
+- **Linguagem Funcional:** `pt-BR` obrigatório em todas as mensagens voltadas ao usuário.
+
+## Constraints
+- **Tech Stack**: Next.js 15 (App Router), React 19, TypeScript, Tailwind CSS, Supabase (PostgreSQL, Auth, RLS).
+- **Security**: Isolamento rigoroso via `organization_id` (cada salão/profissional não visualiza dados de outro).
 
 ## Key Decisions
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| Vercel + Supabase Cloud | Parceria de stack oficial para Next.js 15 SSR e PostgreSQL com RLS | ✓ Aprovado |
-| Roteiro de Testes em Produção | Garante validação real antes da entrada dos primeiros clientes | — Pending |
+| Pivot para SaaS de Beleza & Estética | Alto valor de mercado e nicho claro (Maquiadoras, Lash, Nails, Salões) | ✓ Aprovado pelo Usuário |
+| Reaproveitamento da Fundação Auth & Multi-tenant | Economia de tempo mantendo infraestrutura já validada e segura | ✓ Ativo |
+| Página Pública de Agendamento por Tenant (`/book/[slug]`) | Fundamental para conversão de clientes finais via Instagram/WhatsApp | — Pending |

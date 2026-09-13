@@ -1,41 +1,48 @@
-# Requirements: Milestone v1.1 (Deploy, Hospedagem Online & Testes Práticos)
+# Requirements: Hub MakePro (Beauty & Esthetics SaaS)
 
 **Defined:** 2026-09-13  
-**Milestone:** v1.1 Deploy, Hospedagem & Validação Prática  
-**Status:** In Progress  
+**Milestone:** v1.0 Beauty Core Release  
+**Core Value:** Gestão completa e agendamento para Salões, Maquiadoras, Lash e Nail Designers.
 
 ---
 
-## Requirements
+## v1 Requirements (Beleza & Estética)
 
-### 1. Versionamento & Repositório Remoto
-- [ ] **DEPLOY-01**: Repositório Git local versionado com commit limpo de todas as 7 fases e sincronizado com o GitHub remoto.
+### 0. Segmentação & Especialização por Tipo de Espaço
+- [x] **BEAUTY-00**: Tenant pode definir seus segmentos de atuação (`Cabelo/Cabeleireira`, `Maquiagem/Make`, `Cílios/Lash`, `Unhas/Nail`, `Estética/Sobrancelhas`, `Salão Completo`), habilitando dinamicamente:
+  - Fichas de anamnese personalizadas (ex: teste de mecha e colorimetria para cabelo, curvatura/mapeamento para lash, estilo e alergias para make, formato e cuticulagem para nails).
+  - Categorias pré-configuradas e vocabulário contextual da interface.
 
-### 2. Infraestrutura de Backend (Supabase Cloud)
-- [ ] **DEPLOY-02**: Projeto criado no Supabase Cloud, aplicação em lote das 5 migrations SQL (`001_initial_schema`, `002_multi_tenant_policies`, `003_beauty_services_specialists`, `004_appointments_and_clients`, `005_financial_transactions`), e validação de triggers e RLS.
+### 1. Catálogo de Serviços & Categorias
+- [x] **BEAUTY-01**: Salão/Profissional pode cadastrar, editar e desativar serviços com nome, duração (minutos), preço (R$) e categoria (`Maquiagem`, `Cílios / Lash`, `Unhas / Nail`, `Cabelo`, `Estética / Sobrancelhas`).
 
-### 3. Hospedagem de Frontend (Vercel Cloud)
-- [ ] **DEPLOY-03**: Projeto importado e deployado na Vercel com variáveis de ambiente configuradas e build de produção bem-sucedido com HTTPS.
+### 2. Gestão de Especialistas & Horários de Trabalho
+- [x] **BEAUTY-02**: Cadastro de profissionais vinculados à organização, definindo quais serviços realizam, dias e horários de atendimento e percentual de comissão (%).
 
-### 4. Plano de Testes & Validação em Produção
-- [ ] **DEPLOY-04**: Execução do Plano de Testes Práticos ponta a ponta:
-  - Teste 1: Cadastro de novo salão / maquiadora e login SSR.
-  - Teste 2: Cadastro de procedimento e especialista com comissão.
-  - Teste 3: Acesso à rota pública `/book/[slug]` e realização de agendamento online.
-  - Teste 4: Confirmação e link de WhatsApp.
-  - Teste 5: Fechamento de comanda no Caixa e conferência da divisão de comissão.
+### 3. Agenda Operacional & Agendamentos
+- [x] **BEAUTY-03**: Calendário de agendamentos com filtros por data, profissional e status (`Pendente`, `Confirmado`, `Em Atendimento`, `Concluído`, `Cancelado`).
+- [x] **BEAUTY-04**: Criação manual de agendamento na recepção/pelo profissional com seleção de cliente, serviço, profissional, data/hora e observações.
 
-### 5. Caderno de Anotações & Alterações
-- [ ] **DEPLOY-05**: Criação do documento `FEEDBACK_LOG.md` estruturado para registrar bugs identificados, oportunidades de UX e melhorias para a v2.0.
+### 4. Gestão de Clientes & Ficha Técnica
+- [x] **BEAUTY-05**: Cadastro de clientes (Nome, WhatsApp, Data de Nascimento) com histórico completo de atendimentos anteriores e anotações técnicas (ex: curvatura do cílio, tonalidade da base, formato da unha).
+
+### 5. Página Pública de Agendamento Online
+- [x] **BEAUTY-06**: Página pública em `/book/[slug]` onde os clientes podem escolher serviço, profissional e horário livre sem precisar de login, gerando link direto para confirmação no WhatsApp.
+
+### 6. Financeiro & Comissões
+- [x] **BEAUTY-07**: Registro de recebimentos por comanda (Dinheiro, Pix, Cartão de Débito/Crédito) e relatório resumido de faturamento e comissões a pagar por profissional.
 
 ---
 
 ## Traceability
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| DEPLOY-01 | Phase 8 (Sprint 008: GitHub & Deploy Infra) | Planned |
-| DEPLOY-02 | Phase 8 (Sprint 008: GitHub & Deploy Infra) | Planned |
-| DEPLOY-03 | Phase 8 (Sprint 008: GitHub & Deploy Infra) | Planned |
-| DEPLOY-04 | Phase 9 (Sprint 009: Testes Práticos & Feedback Log) | Planned |
-| DEPLOY-05 | Phase 9 (Sprint 009: Testes Práticos & Feedback Log) | Planned |
+| Requirement | Phase / Sprint | Status |
+|-------------|----------------|--------|
+| BEAUTY-00 | Phase 4 (Sprint 004: Segmentação, Serviços & Especialistas) | Completed |
+| BEAUTY-01 | Phase 4 (Sprint 004: Segmentação, Serviços & Especialistas) | Completed |
+| BEAUTY-02 | Phase 4 (Sprint 004: Segmentação, Serviços & Especialistas) | Completed |
+| BEAUTY-03 | Phase 5 (Sprint 005: Agenda, Ficha de Anamnese & Clientes) | Completed |
+| BEAUTY-04 | Phase 5 (Sprint 005: Agenda, Ficha de Anamnese & Clientes) | Completed |
+| BEAUTY-05 | Phase 5 (Sprint 005: Agenda, Ficha de Anamnese & Clientes) | Completed |
+| BEAUTY-06 | Phase 6 (Sprint 006: Agendamento Público Online) | Completed |
+| BEAUTY-07 | Phase 7 (Sprint 007: Caixa & Comissões) | Completed |
