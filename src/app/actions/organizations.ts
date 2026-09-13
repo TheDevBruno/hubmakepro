@@ -55,7 +55,15 @@ export async function createOrganization(formData: FormData): Promise<OrgActionR
     return { success: false, message: `Erro ao criar organização: ${orgError?.message || 'Tente novamente.'}` }
   }
 
-  // 2. Associar criador como owner
+  // 2. Garante perfil do usuário em profiles
+  await supabase
+    .from('profiles')
+    .upsert({
+      id: user.id,
+      full_name: user.user_metadata?.full_name || user.email || 'Usuário',
+    }, { onConflict: 'id' })
+
+  // 3. Associar criador como owner
   const { error: memberError } = await supabase
     .from('organization_members')
     .insert({
