@@ -1,48 +1,54 @@
-import { Users, Database, Activity, GitBranch } from 'lucide-react'
+import { CalendarDays, Contact2, DollarSign, TrendingUp } from 'lucide-react'
 
 interface MetricCardsProps {
-  memberCount: number
-  role: string
-  orgName: string
+  totalAppointments: number
+  totalClients: number
+  totalGrossCents: number
+  totalNetCents: number
 }
 
-export function MetricCards({ memberCount, role, orgName }: MetricCardsProps) {
+export function MetricCards({
+  totalAppointments,
+  totalClients,
+  totalGrossCents,
+  totalNetCents,
+}: MetricCardsProps) {
   const metrics = [
     {
-      title: 'Membros do Tenant',
-      value: `${memberCount} ${memberCount === 1 ? 'Membro' : 'Membros'}`,
-      description: `Papel atual: ${role.toUpperCase()}`,
-      icon: Users,
-      color: 'text-blue-400',
-      bgColor: 'bg-blue-500/10',
-      borderColor: 'border-blue-500/20',
+      title: 'Atendimentos Marcados',
+      value: totalAppointments.toString(),
+      description: 'Total acumulado na agenda',
+      icon: CalendarDays,
+      color: 'text-purple-400',
+      bgColor: 'bg-purple-500/10',
+      borderColor: 'border-purple-500/20',
     },
     {
-      title: 'Banco de Dados',
-      value: 'PostgreSQL RLS',
-      description: 'Isolamento de tenant 100% ativo',
-      icon: Database,
+      title: 'Clientes Cadastradas',
+      value: totalClients.toString(),
+      description: 'Prontuários e fichas ativas',
+      icon: Contact2,
+      color: 'text-pink-400',
+      bgColor: 'bg-pink-500/10',
+      borderColor: 'border-pink-500/20',
+    },
+    {
+      title: 'Faturamento Bruto',
+      value: (totalGrossCents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      description: 'Receita total dos procedimentos',
+      icon: DollarSign,
       color: 'text-emerald-400',
       bgColor: 'bg-emerald-500/10',
       borderColor: 'border-emerald-500/20',
     },
     {
-      title: 'Pipelines & CI/CD',
-      value: 'Operacional',
-      description: 'GitHub Actions integrado',
-      icon: GitBranch,
-      color: 'text-amber-400',
-      bgColor: 'bg-amber-500/10',
-      borderColor: 'border-amber-500/20',
-    },
-    {
-      title: 'Saúde do Sistema',
-      value: '99.9% Uptime',
-      description: 'Monitoramento contínuo',
-      icon: Activity,
-      color: 'text-purple-400',
-      bgColor: 'bg-purple-500/10',
-      borderColor: 'border-purple-500/20',
+      title: 'Lucro Líquido do Espaço',
+      value: (totalNetCents / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }),
+      description: 'Após dedução de comissões',
+      icon: TrendingUp,
+      color: 'text-blue-400',
+      bgColor: 'bg-blue-500/10',
+      borderColor: 'border-blue-500/20',
     },
   ]
 
@@ -71,3 +77,4 @@ export function MetricCards({ memberCount, role, orgName }: MetricCardsProps) {
     </div>
   )
 }
+

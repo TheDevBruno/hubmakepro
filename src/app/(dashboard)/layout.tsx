@@ -38,6 +38,7 @@ export default async function DashboardLayout({
       return {
         id: org.id,
         name: org.name,
+        slug: org.slug,
         role: m.role,
       }
     })
@@ -49,7 +50,7 @@ export default async function DashboardLayout({
   return (
     <div className="flex h-screen bg-[#090d16] text-slate-100 overflow-hidden">
       {/* Sidebar Lateral */}
-      <DashboardSidebar currentOrgName={activeOrg?.name} />
+      <DashboardSidebar currentOrgName={activeOrg?.name} currentOrgSlug={activeOrg?.slug} />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto">

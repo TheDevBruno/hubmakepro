@@ -6,6 +6,7 @@ import { switchOrganization, createOrganization } from '@/app/actions/organizati
 export interface OrgOption {
   id: string
   name: string
+  slug?: string
   role: string
 }
 
