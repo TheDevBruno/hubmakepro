@@ -1,0 +1,2 @@
+# Integration Tests Directory
+Este diretório armazena testes de integração entre camadas (API Handlers, Supabase Client e Server Actions).

@@ -1,0 +1,75 @@
+'use server'
+
+import { cookies } from 'next/headers'
+import { revalidatePath } from 'next/cache'
+import { createClient } from '@/lib/supabase/server'
+
+export type ClientActionResult = {
+  success: boolean
+  message: string
+  clientId?: string
+}
+
+/**
+ * Cria um novo cliente associado à organização ativa.
+ */
+export async function createClientRecord(formData: FormData): Promise<ClientActionResult> {
+  const name = formData.get('name')?.toString().trim()
+  const phone = formData.get('phone')?.toString().trim()
+  const email = formData.get('email')?.toString().trim() || null
+  const birthDate = formData.get('birthDate')?.toString() || null
+  const notes = formData.get('notes')?.toString().trim() || null
+
+  // Anamnese
+  const lashCurl = formData.get('lashCurl')?.toString() || null
+  const lashMapping = formData.get('lashMapping')?.toString() || null
+  const skinType = formData.get('skinType')?.toString() || null
+  const allergies = formData.get('allergies')?.toString() || null
+  const nailTechnique = formData.get('nailTechnique')?.toString() || null
+
+  const anamnesisData = {
+    ...(lashCurl && { lashCurl }),
+    ...(lashMapping && { lashMapping }),
+    ...(skinType && { skinType }),
+    ...(allergies && { allergies }),
+    ...(nailTechnique && { nailTechnique }),
+  }
+
+  if (!name || name.length < 2) {
+    return { success: false, message: 'O nome do cliente é obrigatório.' }
+  }
+
+  if (!phone || phone.length < 8) {
+    return { success: false, message: 'WhatsApp do cliente é obrigatório.' }
+  }
+
+  const supabase = await createClient()
+  const cookieStore = await cookies()
+  const currentOrgId = cookieStore.get('current_org_id')?.value
+
+  if (!currentOrgId) {
+    return { success: false, message: 'Nenhuma organização ativa selecionada.' }
+  }
+
+  const { data, error } = await supabase
+    .from('clients')
+    .insert({
+      organization_id: currentOrgId,
+      name,
+      phone,
+      email,
+      birth_date: birthDate,
+      notes,
+      anamnesis_data: anamnesisData,
+    })
+    .select('id')
+    .single()
+
+  if (error) {
+    return { success: false, message: `Erro ao cadastrar cliente: ${error.message}` }
+  }
+
+  revalidatePath('/clients')
+  revalidatePath('/appointments')
+  return { success: true, message: 'Cliente cadastrado com sucesso!', clientId: data.id }
+}

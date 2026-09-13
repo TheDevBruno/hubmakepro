@@ -1,0 +1,2 @@
+# Security & RLS Tests Directory
+Este diretório armazena testes automatizados de segurança, auditoria de Row Level Security (RLS) e isolamento multi-tenant.

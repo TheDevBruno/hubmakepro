@@ -1,0 +1,7 @@
+# Código Fonte (src/)
+Estrutura modular do sistema SaaS:
+- `src/app/`: Páginas e APIs do Next.js
+- `src/components/`: Componentes de Interface
+- `src/lib/`: Clientes e utilitários de terceiros (Supabase)
+- `src/services/`: Lógica de negócio
+- `src/types/`: Tipagens TypeScript

@@ -1,0 +1,2 @@
+# End-to-End Tests Directory
+Este diretório armazena testes ponta a ponta (Playwright) que validam fluxos de usuários reais na interface.
