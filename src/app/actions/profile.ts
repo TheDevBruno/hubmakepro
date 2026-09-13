@@ -11,7 +11,7 @@ export type ProfileActionResult = {
 /**
  * Atualiza os dados do perfil do usuário atual.
  */
-export async function updateProfile(formData: FormData): Promise<ProfileActionResult> {
+export async function updateProfile(formData: FormData): Promise<void> {
   const fullName = formData.get('fullName')?.toString().trim()
 
   if (!fullName || fullName.length < 2) {

@@ -13,7 +13,7 @@ export type AppointmentActionResult = {
 /**
  * Cria um novo agendamento com cálculo automático de horário de término.
  */
-export async function createAppointmentRecord(formData: FormData): Promise<AppointmentActionResult> {
+export async function createAppointmentRecord(formData: FormData): Promise<void> {
   const clientId = formData.get('clientId')?.toString()
   const specialistId = formData.get('specialistId')?.toString()
   const serviceId = formData.get('serviceId')?.toString()

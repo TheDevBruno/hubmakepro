@@ -15,7 +15,7 @@ export type BeautyCategory = 'makeup' | 'lash' | 'nails' | 'hair' | 'esthetics' 
 /**
  * Cria um novo serviço associado à organização ativa.
  */
-export async function createService(formData: FormData): Promise<ServiceActionResult> {
+export async function createService(formData: FormData): Promise<void> {
   const name = formData.get('name')?.toString().trim()
   const category = (formData.get('category')?.toString() || 'makeup') as BeautyCategory
   const durationMinutes = parseInt(formData.get('durationMinutes')?.toString() || '60', 10)

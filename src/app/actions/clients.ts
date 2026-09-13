@@ -13,7 +13,7 @@ export type ClientActionResult = {
 /**
  * Cria um novo cliente associado à organização ativa.
  */
-export async function createClientRecord(formData: FormData): Promise<ClientActionResult> {
+export async function createClientRecord(formData: FormData): Promise<void> {
   const name = formData.get('name')?.toString().trim()
   const phone = formData.get('phone')?.toString().trim()
   const email = formData.get('email')?.toString().trim() || null

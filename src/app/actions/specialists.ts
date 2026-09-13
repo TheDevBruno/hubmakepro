@@ -13,7 +13,7 @@ export type SpecialistActionResult = {
 /**
  * Cria um novo especialista/profissional.
  */
-export async function createSpecialist(formData: FormData): Promise<SpecialistActionResult> {
+export async function createSpecialist(formData: FormData): Promise<void> {
   const name = formData.get('name')?.toString().trim()
   const phone = formData.get('phone')?.toString().trim() || null
   const commissionRate = parseInt(formData.get('commissionRate')?.toString() || '50', 10)
