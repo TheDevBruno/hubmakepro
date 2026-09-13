@@ -7,4 +7,14 @@
 ---
 
 ## Active Milestone
-*(Nenhum marco ativo. Utilize `/gsd-new-milestone` para iniciar o planejamento da v2.0)*
+*(Nenhum marco ativo. Utilize `/gsd-new-milestone` para iniciar o ciclo de execução da v1.1 / v2.0)*
+
+---
+
+## Backlog Capturado (Refinamento Operacional v1.1)
+- [ ] **999.1 — Configurações Avançadas da Organização:** Contato, horário de funcionamento semanal, endereço e segmentação detalhada.
+- [ ] **999.2 — Gestão e Horários Individuais de Especialistas:** Grade de disponibilidade, fotos, vínculos diretos com serviços e modais de edição.
+- [ ] **999.3 — Ficha de Clientes com Histórico 360°:** Linha do tempo de atendimentos passados, histórico de procedimentos e evolução da anamnese.
+- [ ] **999.4 — Agenda com Reagendamento e Modais de Edição:** Edição de horário, alteração de equipe/serviço e cards interativos com modais.
+- [ ] **999.5 — Otimização de Performance e Navegação Instantânea:** Prefetching, transições instantâneas com skeletons e loading.tsx.
+
