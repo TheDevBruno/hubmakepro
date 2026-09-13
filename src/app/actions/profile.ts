@@ -15,14 +15,14 @@ export async function updateProfile(formData: FormData): Promise<void> {
   const fullName = formData.get('fullName')?.toString().trim()
 
   if (!fullName || fullName.length < 2) {
-    return { success: false, message: 'O nome completo deve ter no mínimo 2 caracteres.' }
+    return
   }
 
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
 
   if (authError || !user) {
-    return { success: false, message: 'Sessão expirada. Faça login novamente.' }
+    return
   }
 
   const { error } = await supabase
@@ -34,10 +34,10 @@ export async function updateProfile(formData: FormData): Promise<void> {
     .eq('id', user.id)
 
   if (error) {
-    return { success: false, message: `Erro ao atualizar perfil: ${error.message}` }
+    console.error('Erro ao atualizar perfil:', error.message)
+    return
   }
 
   revalidatePath('/dashboard')
   revalidatePath('/settings/profile')
-  return { success: true, message: 'Perfil atualizado com sucesso!' }
 }

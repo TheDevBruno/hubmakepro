@@ -36,11 +36,11 @@ export async function createClientRecord(formData: FormData): Promise<void> {
   }
 
   if (!name || name.length < 2) {
-    return { success: false, message: 'O nome do cliente é obrigatório.' }
+    return
   }
 
   if (!phone || phone.length < 8) {
-    return { success: false, message: 'WhatsApp do cliente é obrigatório.' }
+    return
   }
 
   const supabase = await createClient()
@@ -48,10 +48,10 @@ export async function createClientRecord(formData: FormData): Promise<void> {
   const currentOrgId = cookieStore.get('current_org_id')?.value
 
   if (!currentOrgId) {
-    return { success: false, message: 'Nenhuma organização ativa selecionada.' }
+    return
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('clients')
     .insert({
       organization_id: currentOrgId,
@@ -62,14 +62,12 @@ export async function createClientRecord(formData: FormData): Promise<void> {
       notes,
       anamnesis_data: anamnesisData,
     })
-    .select('id')
-    .single()
 
   if (error) {
-    return { success: false, message: `Erro ao cadastrar cliente: ${error.message}` }
+    console.error('Erro ao cadastrar cliente:', error.message)
+    return
   }
 
   revalidatePath('/clients')
   revalidatePath('/appointments')
-  return { success: true, message: 'Cliente cadastrado com sucesso!', clientId: data.id }
 }

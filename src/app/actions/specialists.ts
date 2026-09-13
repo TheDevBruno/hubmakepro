@@ -20,11 +20,11 @@ export async function createSpecialist(formData: FormData): Promise<void> {
   const specialtiesRaw = formData.getAll('specialties').map((s) => s.toString())
 
   if (!name || name.length < 2) {
-    return { success: false, message: 'O nome do profissional é obrigatório.' }
+    return
   }
 
   if (isNaN(commissionRate) || commissionRate < 0 || commissionRate > 100) {
-    return { success: false, message: 'A taxa de comissão deve estar entre 0% e 100%.' }
+    return
   }
 
   const supabase = await createClient()
@@ -32,10 +32,10 @@ export async function createSpecialist(formData: FormData): Promise<void> {
   const currentOrgId = cookieStore.get('current_org_id')?.value
 
   if (!currentOrgId) {
-    return { success: false, message: 'Nenhuma organização ativa selecionada.' }
+    return
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('specialists')
     .insert({
       organization_id: currentOrgId,
@@ -45,13 +45,11 @@ export async function createSpecialist(formData: FormData): Promise<void> {
       specialties: specialtiesRaw,
       is_active: true,
     })
-    .select('id')
-    .single()
 
   if (error) {
-    return { success: false, message: `Erro ao cadastrar profissional: ${error.message}` }
+    console.error('Erro ao cadastrar profissional:', error.message)
+    return
   }
 
   revalidatePath('/specialists')
-  return { success: true, message: 'Profissional cadastrado com sucesso!', specialistId: data.id }
 }

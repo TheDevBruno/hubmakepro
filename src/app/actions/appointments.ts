@@ -21,7 +21,7 @@ export async function createAppointmentRecord(formData: FormData): Promise<void>
   const notes = formData.get('notes')?.toString().trim() || null
 
   if (!clientId || !specialistId || !serviceId || !startTimeRaw) {
-    return { success: false, message: 'Todos os campos de agendamento são obrigatórios.' }
+    return
   }
 
   const supabase = await createClient()
@@ -29,7 +29,7 @@ export async function createAppointmentRecord(formData: FormData): Promise<void>
   const currentOrgId = cookieStore.get('current_org_id')?.value
 
   if (!currentOrgId) {
-    return { success: false, message: 'Nenhuma organização ativa selecionada.' }
+    return
   }
 
   // 1. Busca dados do serviço para saber duração e preço
@@ -40,14 +40,14 @@ export async function createAppointmentRecord(formData: FormData): Promise<void>
     .single()
 
   if (serviceError || !service) {
-    return { success: false, message: 'Serviço não encontrado.' }
+    return
   }
 
   const startDate = new Date(startTimeRaw)
   const endDate = new Date(startDate.getTime() + service.duration_minutes * 60000)
 
   // 2. Insere agendamento
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('appointments')
     .insert({
       organization_id: currentOrgId,
@@ -60,15 +60,13 @@ export async function createAppointmentRecord(formData: FormData): Promise<void>
       price_cents: service.price_cents,
       notes,
     })
-    .select('id')
-    .single()
 
   if (error) {
-    return { success: false, message: `Erro ao agendar: ${error.message}` }
+    console.error('Erro ao agendar:', error.message)
+    return
   }
 
   revalidatePath('/appointments')
-  return { success: true, message: 'Agendamento confirmado com sucesso!', appointmentId: data.id }
 }
 
 /**

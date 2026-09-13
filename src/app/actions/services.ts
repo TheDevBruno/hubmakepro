@@ -24,15 +24,15 @@ export async function createService(formData: FormData): Promise<void> {
   const description = formData.get('description')?.toString().trim() || null
 
   if (!name || name.length < 2) {
-    return { success: false, message: 'O nome do serviço deve ter no mínimo 2 caracteres.' }
+    return
   }
 
   if (isNaN(durationMinutes) || durationMinutes <= 0) {
-    return { success: false, message: 'A duração deve ser superior a 0 minutos.' }
+    return
   }
 
   if (isNaN(priceCents) || priceCents < 0) {
-    return { success: false, message: 'Preço inválido.' }
+    return
   }
 
   const supabase = await createClient()
@@ -40,10 +40,10 @@ export async function createService(formData: FormData): Promise<void> {
   const currentOrgId = cookieStore.get('current_org_id')?.value
 
   if (!currentOrgId) {
-    return { success: false, message: 'Nenhuma organização ativa selecionada.' }
+    return
   }
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from('services')
     .insert({
       organization_id: currentOrgId,
@@ -54,15 +54,13 @@ export async function createService(formData: FormData): Promise<void> {
       description,
       is_active: true,
     })
-    .select('id')
-    .single()
 
   if (error) {
-    return { success: false, message: `Erro ao cadastrar serviço: ${error.message}` }
+    console.error('Erro ao cadastrar serviço:', error.message)
+    return
   }
 
   revalidatePath('/services')
-  return { success: true, message: 'Serviço cadastrado com sucesso!', serviceId: data.id }
 }
 
 /**
