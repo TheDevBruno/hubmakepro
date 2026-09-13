@@ -1,3 +1,5 @@
+import { describe, it, expect } from 'vitest'
+
 describe('SaaS Development OS — Suite de Autenticação e Configuração Base', () => {
   it('deve validar o formato padrão de e-mail e regras de senha', () => {
     const email = 'admin@hubmakepro.com'
