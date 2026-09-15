@@ -2,13 +2,13 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Calendar, Clock, User, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveOrganizationId } from '@/lib/tenant'
 import { createAppointmentRecord } from '@/app/actions/appointments'
 import { AppointmentList } from './appointment-list'
 
 export default async function AppointmentsPage() {
   const supabase = await createClient()
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
+  const currentOrgId = await getActiveOrganizationId(supabase)
 
   // Busca agendamentos com joins
   const { data: appointments } = currentOrgId

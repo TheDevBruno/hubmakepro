@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveOrganizationId } from '@/lib/tenant'
 import { updateOrganizationDetails } from '@/app/actions/organizations'
 
 export default async function OrganizationSettingsPage() {
@@ -12,8 +13,7 @@ export default async function OrganizationSettingsPage() {
     redirect('/login')
   }
 
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
+  const currentOrgId = await getActiveOrganizationId(supabase)
 
   // Busca dados da organização ativa e membros
   const { data: currentOrg } = currentOrgId

@@ -2,14 +2,14 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Calendar, Users2, Sparkles, DollarSign, Globe2, Clock, Contact2, ArrowRight } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveOrganizationId } from '@/lib/tenant'
 import { MetricCards } from '@/components/dashboard/metric-cards'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
 
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
+  const currentOrgId = await getActiveOrganizationId(supabase)
 
   // 1. Busca dados da organização ativa
   const { data: orgData } = currentOrgId

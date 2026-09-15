@@ -1,11 +1,11 @@
 import { cookies } from 'next/headers'
 import { DollarSign, TrendingUp, Users, CreditCard, Banknote, QrCode } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveOrganizationId } from '@/lib/tenant'
 
 export default async function FinancialPage() {
   const supabase = await createClient()
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
+  const currentOrgId = await getActiveOrganizationId(supabase)
 
   // Busca transações do tenant
   const { data: transactions } = currentOrgId

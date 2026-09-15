@@ -2,6 +2,7 @@ import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { Plus, Sparkles, Clock, DollarSign, Tag, CheckCircle2, XCircle } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveOrganizationId } from '@/lib/tenant'
 import { createService, toggleServiceStatus } from '@/app/actions/services'
 
 const categoryLabels: Record<string, { label: string; color: string; border: string }> = {
@@ -15,8 +16,7 @@ const categoryLabels: Record<string, { label: string; color: string; border: str
 
 export default async function ServicesPage() {
   const supabase = await createClient()
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
+  const currentOrgId = await getActiveOrganizationId(supabase)
 
   const { data: services } = currentOrgId
     ? await supabase

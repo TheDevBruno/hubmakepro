@@ -3,6 +3,7 @@
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveOrganizationId } from '@/lib/tenant'
 
 export type ClientActionResult = {
   success: boolean
@@ -44,10 +45,10 @@ export async function createClientRecord(formData: FormData): Promise<void> {
   }
 
   const supabase = await createClient()
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
+  const currentOrgId = await getActiveOrganizationId(supabase)
 
   if (!currentOrgId) {
+    console.error('Nenhuma organização ativa identificada ao cadastrar cliente.')
     return
   }
 

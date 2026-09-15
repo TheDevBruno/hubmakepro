@@ -1,14 +1,14 @@
 import { cookies } from 'next/headers'
 import { Users2, Percent, Phone, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
+import { getActiveOrganizationId } from '@/lib/tenant'
 import { createSpecialist } from '@/app/actions/specialists'
 
 import { SpecialistList } from './specialist-list'
 
 export default async function SpecialistsPage() {
   const supabase = await createClient()
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
+  const currentOrgId = await getActiveOrganizationId(supabase)
 
   const { data: specialists } = currentOrgId
     ? await supabase
