@@ -8,8 +8,9 @@
 ## Active Milestone: v1.1 — Refinamento Operacional, Edição Dinâmica & Performance
 
 ### Phase 8: Performance, Skeletons & Navegação Instantânea
-- [ ] **Goal:** Eliminar lentidão na troca de páginas implementando `loading.tsx` com skeletons modernos e prefetching em todas as rotas do dashboard.
-- [ ] **Deliverables:** `loading.tsx` nas rotas principais, otimização de `Link` na sidebar e feedback visual imediato em formulários.
+- [x] **Goal:** Eliminar lentidão na troca de páginas implementando `loading.tsx` com skeletons modernos e prefetching em todas as rotas do dashboard.
+- [x] **Deliverables:** `loading.tsx` nas rotas principais, otimização de `Link` na sidebar e feedback visual imediato em formulários.
+- [x] **Status:** Concluído e testado com 21/21 testes unitários aprovados.
 
 ### Phase 9: Configurações Completas do Salão / Organização
 - [ ] **Goal:** Expandir a página `/settings/organization` com dados de contato comercial, horários semanais de funcionamento, endereço e segmentação detalhada de nichos.

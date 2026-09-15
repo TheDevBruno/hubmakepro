@@ -69,6 +69,7 @@ export function DashboardSidebar({ currentOrgName, currentOrgSlug }: DashboardSi
               <Link
                 key={item.label}
                 href={item.href}
+                prefetch={true}
                 target={item.target}
                 className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition ${
                   isActive

@@ -4,13 +4,13 @@
 
 ### Status Atual
 - **Marco Ativo:** `v1.1`
-- **Fase Atual:** `Phase 8` (Performance, Skeletons & Navegação Instantânea)
-- **Status da Fase:** Planejada (Pronta para `/gsd-execute-phase 8`)
+- **Fase Atual:** `Phase 9` (Configurações Completas do Salão / Organização)
+- **Status da Fase:** Pronta para planejamento (`/gsd-plan-phase 9`)
 
 ---
 
 ## Fases do Marco v1.1
-- [ ] **Phase 8:** Performance, Skeletons & Navegação Instantânea (Planejada)
+- [x] **Phase 8:** Performance, Skeletons & Navegação Instantânea (Concluída)
 - [ ] **Phase 9:** Configurações Completas do Salão / Organização
 - [ ] **Phase 10:** Gestão Avançada de Especialistas & Horários Individuais
 - [ ] **Phase 11:** Ficha de Clientes com Histórico 360° & Anamnese Viva
