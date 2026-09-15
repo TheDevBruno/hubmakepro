@@ -1,25 +1,30 @@
 # STATE: Hub MakePro (Beauty & Esthetics SaaS)
  
-## Active Milestone: v1.1 — Refinamento Operacional, Edição Dinâmica & Performance
+## Active Milestone: v2.0 — Lab Beauty SaaS: Organization-Driven Architecture & UI/UX Design System
  
 ### Status Atual
-- **Marco Ativo:** `v1.1` (100% Concluído)
-- **Fase Atual:** `Todas as fases concluídas (Phases 8, 9, 10, 11, 12)`
-- **Status do Marco:** Pronto para fechamento e auditoria (`/gsd-complete-milestone` ou novos ciclos)
+- **Marco Ativo:** `v2.0` (Iniciado)
+- **Fase Atual:** `Phase 1` (Design System Foundation)
+- **Status da Fase:** Pronta para planejamento detalhado (`/gsd-plan-phase 1`)
  
 ---
  
-## Fases do Marco v1.1
-- [x] **Phase 8:** Performance, Skeletons & Navegação Instantânea (Concluída)
-- [x] **Phase 9:** Configurações Completas do Salão / Organização (Concluída)
-- [x] **Phase 10:** Gestão Avançada de Especialistas & Horários Individuais (Concluída)
-- [x] **Phase 11:** Ficha de Clientes com Histórico 360° & Anamnese Viva (Concluída)
-- [x] **Phase 12:** Agenda Operacional Dinâmica (Reagendamento & Modais nos Cards) (Concluída)
+## Fases do Marco v2.0
+- [ ] **Phase 1:** Design System Foundation (Design Tokens, Componentes Atômicos & 5 Estados)
+- [ ] **Phase 2:** Application Shell & Responsive Navigation (Sidebar, Header, Mobile Bottom Bar)
+- [ ] **Phase 3:** Organization Domain & Multi-Tenant Foundation (RBAC & RLS Reforçado)
+- [ ] **Phase 4:** Business Type Architecture (Modelagem de Nichos de Beleza)
+- [ ] **Phase 5:** Business Templates Engine (Injeção de Serviços e Anamnese Sugeridos)
+- [ ] **Phase 6:** Players & Feature Configuration (Engine de Módulos Ativos)
+- [ ] **Phase 7:** Business Rules Configuration (Políticas Operacionais & Buffer Time)
+- [ ] **Phase 8:** Theme & Layout Configuration (Personalização Visual do Tenant)
+- [ ] **Phase 9:** Organization Onboarding Wizard (Fluxo Guiado de Criação de Espaço)
+- [ ] **Phase 10:** Organization-Driven Dashboard (Dashboard Modular por Módulos Ativos)
+- [ ] **Phase 11+:** Progressive Modules Migration (Refatoração Incremental dos Módulos Operacionais)
  
 ---
  
 ## Quality Gate Status
 - **Testes Unitários:** 29/29 aprovados (`vitest run`)
 - **TypeScript:** Rigoroso sem `any` implícito
-- **Banco de Dados:** Supabase Online sincronizado com 10 tabelas, schema expandido e RLS ativo
-
+- **Banco de Dados:** Supabase Online sincronizado com RLS ativo em todas as tabelas
