@@ -3,6 +3,8 @@ import { Contact2, Phone, Calendar, Sparkles, FileSpreadsheet } from 'lucide-rea
 import { createClient } from '@/lib/supabase/server'
 import { createClientRecord } from '@/app/actions/clients'
 
+import { ClientList } from './client-list'
+
 export default async function ClientsPage() {
   const supabase = await createClient()
   const cookieStore = await cookies()
@@ -11,7 +13,14 @@ export default async function ClientsPage() {
   const { data: clients } = currentOrgId
     ? await supabase
         .from('clients')
-        .select('*')
+        .select(`
+          *,
+          appointments(
+            id, start_time, status, price_cents,
+            services(name),
+            specialists(name)
+          )
+        `)
         .eq('organization_id', currentOrgId)
         .order('name', { ascending: true })
     : { data: [] }
@@ -26,7 +35,7 @@ export default async function ClientsPage() {
             Clientes & Ficha de Anamnese
           </h1>
           <p className="text-xs text-slate-400">
-            Prontuário com histórico, preferências e anotações técnicas por nicho (Make, Lash, Nails, Cabelo)
+            Prontuário com histórico, preferências e anotações técnicas por nicho (Make, Lash, Nails, Cabelo). Clique para editar.
           </p>
         </div>
       </div>
@@ -135,55 +144,10 @@ export default async function ClientsPage() {
           </form>
         </div>
 
-        {/* Listagem de Clientes */}
-        <div className="lg:col-span-2 space-y-3">
+        {/* Listagem Interativa de Clientes com Modal 360 */}
+        <div className="lg:col-span-2">
           {clients && clients.length > 0 ? (
-            clients.map((c: any) => {
-              const anamnesis = c.anamnesis_data || {}
-              return (
-                <div
-                  key={c.id}
-                  className="rounded-xl border border-slate-800 bg-[#0f172a] p-4 space-y-2 hover:border-slate-700 transition"
-                >
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                    <div>
-                      <span className="text-sm font-bold text-white block">{c.name}</span>
-                      <span className="text-xs text-slate-400 flex items-center gap-2">
-                        <Phone className="h-3 w-3 text-emerald-400" />
-                        {c.phone}
-                      </span>
-                    </div>
-
-                    {c.birth_date && (
-                      <span className="text-[11px] text-slate-500">
-                        Nascimento: {new Date(c.birth_date).toLocaleDateString('pt-BR')}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Badges de Anamnese */}
-                  {Object.keys(anamnesis).length > 0 && (
-                    <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800/60">
-                      {anamnesis.lashMapping && (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-purple-500/10 text-purple-300 border border-purple-500/20">
-                          Lash: {anamnesis.lashMapping}
-                        </span>
-                      )}
-                      {anamnesis.nailTechnique && (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">
-                          Nail: {anamnesis.nailTechnique}
-                        </span>
-                      )}
-                      {anamnesis.skinType && (
-                        <span className="text-[10px] px-2 py-0.5 rounded bg-pink-500/10 text-pink-300 border border-pink-500/20">
-                          Make/Pele: {anamnesis.skinType}
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-              )
-            })
+            <ClientList clients={clients} />
           ) : (
             <div className="rounded-xl border border-slate-800 bg-[#0f172a] p-8 text-center">
               <p className="text-sm text-slate-400">Nenhum cliente cadastrado ainda.</p>

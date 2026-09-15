@@ -158,3 +158,48 @@ export async function addMemberToOrg(
   revalidatePath('/settings/organization')
   return { success: true, message: 'Membro adicionado com sucesso!' }
 }
+
+/**
+ * Atualiza os detalhes operacionais do salão / espaço de beleza.
+ */
+export async function updateOrganizationDetails(formData: FormData): Promise<void> {
+  const orgId = formData.get('orgId')?.toString()
+  const name = formData.get('name')?.toString().trim()
+  const phone = formData.get('phone')?.toString().trim() || null
+  const secondaryPhone = formData.get('secondaryPhone')?.toString().trim() || null
+  const email = formData.get('email')?.toString().trim() || null
+  const instagram = formData.get('instagram')?.toString().trim() || null
+  const address = formData.get('address')?.toString().trim() || null
+  const mapsUrl = formData.get('mapsUrl')?.toString().trim() || null
+  const cancellationPolicy = formData.get('cancellationPolicy')?.toString().trim() || null
+  const segments = formData.getAll('segments').map((s) => s.toString())
+
+  if (!orgId) return
+
+  const supabase = await createClient()
+
+  // 1. Atualiza nome da organização se alterado
+  if (name && name.length >= 2) {
+    await supabase.from('organizations').update({ name, updated_at: new Date().toISOString() }).eq('id', orgId)
+  }
+
+  // 2. Upsert nas configurações do tenant
+  await supabase
+    .from('organization_settings')
+    .upsert({
+      organization_id: orgId,
+      phone,
+      secondary_phone: secondaryPhone,
+      email,
+      instagram,
+      address,
+      maps_url: mapsUrl,
+      cancellation_policy: cancellationPolicy,
+      business_segments: segments.length > 0 ? segments : ['makeup', 'lash', 'nails', 'hair', 'esthetics'],
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'organization_id' })
+
+  revalidatePath('/settings/organization')
+  revalidatePath('/dashboard')
+  revalidatePath('/', 'layout')
+}

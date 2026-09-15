@@ -3,6 +3,8 @@ import { Users2, Percent, Phone, Sparkles } from 'lucide-react'
 import { createClient } from '@/lib/supabase/server'
 import { createSpecialist } from '@/app/actions/specialists'
 
+import { SpecialistList } from './specialist-list'
+
 export default async function SpecialistsPage() {
   const supabase = await createClient()
   const cookieStore = await cookies()
@@ -26,7 +28,7 @@ export default async function SpecialistsPage() {
             Especialistas & Profissionais
           </h1>
           <p className="text-xs text-slate-400">
-            Gerencie sua equipe, comissões percentuais e especialidades (Lash, Make, Nails, Hair)
+            Gerencie sua equipe, comissões percentuais e especialidades (Lash, Make, Nails, Hair). Clique no card para editar.
           </p>
         </div>
       </div>
@@ -112,39 +114,10 @@ export default async function SpecialistsPage() {
           </form>
         </div>
 
-        {/* Lista de Especialistas */}
-        <div className="lg:col-span-2 space-y-3">
+        {/* Lista de Especialistas Interativa */}
+        <div className="lg:col-span-2">
           {specialists && specialists.length > 0 ? (
-            specialists.map((sp: any) => (
-              <div
-                key={sp.id}
-                className="rounded-xl border border-slate-800 bg-[#0f172a] p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 hover:border-slate-700 transition"
-              >
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-white">{sp.name}</span>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                      {sp.commission_rate}% Comissão
-                    </span>
-                  </div>
-                  {sp.phone && (
-                    <p className="text-xs text-slate-400 flex items-center gap-1">
-                      <Phone className="h-3 w-3 text-slate-500" />
-                      {sp.phone}
-                    </p>
-                  )}
-                  {sp.specialties && sp.specialties.length > 0 && (
-                    <div className="flex items-center gap-1.5 pt-1">
-                      {sp.specialties.map((spec: string) => (
-                        <span key={spec} className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300">
-                          {spec.toUpperCase()}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))
+            <SpecialistList specialists={specialists} />
           ) : (
             <div className="rounded-xl border border-slate-800 bg-[#0f172a] p-8 text-center">
               <p className="text-sm text-slate-400">Nenhum especialista cadastrado ainda.</p>

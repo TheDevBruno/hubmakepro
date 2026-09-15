@@ -70,23 +70,56 @@ export async function createAppointmentRecord(formData: FormData): Promise<void>
 }
 
 /**
- * Atualiza o status do agendamento (ex: 'confirmed', 'in_progress', 'completed', 'cancelled').
+ * Atualiza os dados completos de um agendamento existente (Reagendamento/Edição).
  */
-export async function updateAppointmentStatus(
-  appointmentId: string,
-  newStatus: 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled'
-): Promise<AppointmentActionResult> {
+export async function updateAppointmentRecord(formData: FormData): Promise<AppointmentActionResult> {
+  const id = formData.get('id')?.toString()
+  const specialistId = formData.get('specialistId')?.toString()
+  const serviceId = formData.get('serviceId')?.toString()
+  const startTimeRaw = formData.get('startTime')?.toString()
+  const status = formData.get('status')?.toString() as any
+  const notes = formData.get('notes')?.toString().trim() || null
+
+  if (!id || !specialistId || !serviceId || !startTimeRaw) {
+    return { success: false, message: 'Campos obrigatórios incompletos para atualização.' }
+  }
+
   const supabase = await createClient()
+
+  // 1. Busca duração e preço atualizado do serviço caso tenha sido alterado
+  const { data: service, error: serviceError } = await supabase
+    .from('services')
+    .select('duration_minutes, price_cents')
+    .eq('id', serviceId)
+    .single()
+
+  if (serviceError || !service) {
+    return { success: false, message: 'Serviço não encontrado para cálculo de duração.' }
+  }
+
+  const startDate = new Date(startTimeRaw)
+  const endDate = new Date(startDate.getTime() + service.duration_minutes * 60000)
 
   const { error } = await supabase
     .from('appointments')
-    .update({ status: newStatus, updated_at: new Date().toISOString() })
-    .eq('id', appointmentId)
+    .update({
+      specialist_id: specialistId,
+      service_id: serviceId,
+      start_time: startDate.toISOString(),
+      end_time: endDate.toISOString(),
+      price_cents: service.price_cents,
+      status: status || 'confirmed',
+      notes,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', id)
 
   if (error) {
-    return { success: false, message: `Erro ao atualizar status: ${error.message}` }
+    return { success: false, message: `Erro ao salvar agendamento: ${error.message}` }
   }
 
   revalidatePath('/appointments')
-  return { success: true, message: 'Status do agendamento atualizado!' }
+  revalidatePath('/dashboard')
+  return { success: true, message: 'Agendamento atualizado com sucesso!' }
 }
+
