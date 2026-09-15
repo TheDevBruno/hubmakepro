@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { updateOrganizationDetails } from '@/app/actions/organizations'
 
 export default async function OrganizationSettingsPage() {
   const supabase = await createClient()
