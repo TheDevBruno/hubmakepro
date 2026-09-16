@@ -12,7 +12,7 @@
 ## Fases do Marco v2.0
 - [x] **Phase 1:** Design System Foundation (Design Tokens, Componentes Atômicos & 5 Estados)
 - [x] **Phase 2:** Application Shell & Responsive Navigation (Sidebar, Header, Mobile Bottom Bar)
-- [ ] **Phase 3:** Organization Domain & Multi-Tenant Foundation (RBAC & RLS Reforçado)
+- [x] **Phase 3:** Organization Domain & Multi-Tenant Foundation (RBAC & RLS Reforçado)
 - [ ] **Phase 4:** Business Type Architecture (Modelagem de Nichos de Beleza)
 - [ ] **Phase 5:** Business Templates Engine (Injeção de Serviços e Anamnese Sugeridos)
 - [ ] **Phase 6:** Players & Feature Configuration (Engine de Módulos Ativos)
@@ -25,7 +25,8 @@
 ---
  
 ## Quality Gate Status
-- **Testes Unitários:** 39/39 aprovados (`vitest run`)
+- **Testes Unitários:** 50/50 aprovados (`vitest run`)
 - **TypeScript:** Rigoroso sem `any` implícito
+- **RBAC & Multi-Tenant:** Autorização server-side estrita com `requireOrgMembership` e isolamento de RLS
 - **IDs Semânticos:** 100% dos elementos div e section auditados com IDs únicos
-- **Banco de Dados:** Supabase Online sincronizado com RLS ativo em todas as tabelas
+- **Banco de Dados:** Supabase com migrations versionadas e RLS ativo em todas as tabelas

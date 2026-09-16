@@ -1,8 +1,8 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { requireOrgMembership } from '@/lib/auth/authorization'
 
 export type FinancialActionResult = {
   success: boolean
@@ -13,7 +13,7 @@ export type FinancialActionResult = {
 export type PaymentMethod = 'pix' | 'credit_card' | 'debit_card' | 'cash'
 
 /**
- * Conclui um agendamento, apura a comissão do especialista e registra o pagamento.
+ * Conclui um agendamento, apura a comissão do especialista e registra o pagamento com validação server-side (financial:manage).
  */
 export async function closeAppointmentAndPay(
   appointmentId: string,
@@ -21,14 +21,17 @@ export async function closeAppointmentAndPay(
   customAmountCents?: number
 ): Promise<FinancialActionResult> {
   const supabase = await createClient()
-  const cookieStore = await cookies()
-  const currentOrgId = cookieStore.get('current_org_id')?.value
 
-  if (!currentOrgId) {
-    return { success: false, message: 'Nenhuma organização ativa selecionada.' }
+  // 1. Validação estrita server-side de autorização e organização ativa
+  let orgId: string
+  try {
+    const authContext = await requireOrgMembership(supabase, null, 'financial:manage')
+    orgId = authContext.orgId
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Acesso não autorizado ao financeiro.' }
   }
 
-  // 1. Busca os detalhes do agendamento
+  // 2. Busca os detalhes do agendamento garantindo isolamento de tenant
   const { data: apt, error: aptError } = await supabase
     .from('appointments')
     .select(`
@@ -36,10 +39,11 @@ export async function closeAppointmentAndPay(
       specialists(commission_rate)
     `)
     .eq('id', appointmentId)
+    .eq('organization_id', orgId)
     .single()
 
   if (aptError || !apt) {
-    return { success: false, message: 'Agendamento não encontrado.' }
+    return { success: false, message: 'Agendamento não encontrado nesta organização.' }
   }
 
   const grossAmount = customAmountCents ?? apt.price_cents
@@ -49,11 +53,11 @@ export async function closeAppointmentAndPay(
   const commissionAmount = Math.round((grossAmount * commissionRate) / 100)
   const netAmount = grossAmount - commissionAmount
 
-  // 2. Insere a transação financeira
+  // 3. Insere a transação financeira
   const { data: tx, error: txError } = await supabase
     .from('financial_transactions')
     .insert({
-      organization_id: currentOrgId,
+      organization_id: orgId,
       appointment_id: apt.id,
       specialist_id: apt.specialist_id,
       service_id: apt.service_id,
@@ -71,11 +75,12 @@ export async function closeAppointmentAndPay(
     return { success: false, message: `Erro ao gerar pagamento: ${txError.message}` }
   }
 
-  // 3. Atualiza o agendamento para concluído
+  // 4. Atualiza o agendamento para concluído
   await supabase
     .from('appointments')
     .update({ status: 'completed', updated_at: new Date().toISOString() })
     .eq('id', appointmentId)
+    .eq('organization_id', orgId)
 
   revalidatePath('/appointments')
   revalidatePath('/financial')

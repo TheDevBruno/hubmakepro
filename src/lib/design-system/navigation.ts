@@ -11,16 +11,10 @@ import {
   Package,
   Settings,
 } from 'lucide-react'
+import { UserRole, Permission, hasPermission, filterNavItemsByRole, navGroupLabels, BaseNavItem } from '@/lib/rbac'
 
-export interface NavItem {
-  id: string
-  label: string
-  href: string
+export interface NavItem extends BaseNavItem {
   icon: any
-  group: 'main' | 'operations' | 'finance' | 'settings'
-  featureKey?: string
-  target?: string
-  isHighlight?: boolean
 }
 
 export const navigationConfig: NavItem[] = [
@@ -41,6 +35,7 @@ export const navigationConfig: NavItem[] = [
     icon: CalendarDays,
     group: 'operations',
     featureKey: 'appointments',
+    requiredPermission: 'appointments:view',
   },
   {
     id: 'nav-clients',
@@ -49,6 +44,7 @@ export const navigationConfig: NavItem[] = [
     icon: Contact2,
     group: 'operations',
     featureKey: 'clients',
+    requiredPermission: 'clients:view',
   },
   {
     id: 'nav-services',
@@ -57,6 +53,7 @@ export const navigationConfig: NavItem[] = [
     icon: Sparkles,
     group: 'operations',
     featureKey: 'services',
+    requiredPermission: 'services:manage',
   },
   {
     id: 'nav-specialists',
@@ -65,6 +62,7 @@ export const navigationConfig: NavItem[] = [
     icon: Users2,
     group: 'operations',
     featureKey: 'team',
+    requiredPermission: 'specialists:manage',
   },
   // 3. Grupo Financeiro & Salão
   {
@@ -74,6 +72,7 @@ export const navigationConfig: NavItem[] = [
     icon: DollarSign,
     group: 'finance',
     featureKey: 'cash_flow',
+    requiredPermission: 'financial:view',
   },
   // 4. Grupo Ajustes & Identidade
   {
@@ -83,6 +82,7 @@ export const navigationConfig: NavItem[] = [
     icon: Building2,
     group: 'settings',
     featureKey: 'settings',
+    requiredPermission: 'org:manage',
   },
   {
     id: 'nav-profile',
@@ -93,17 +93,12 @@ export const navigationConfig: NavItem[] = [
   },
 ]
 
-export const navGroupLabels: Record<string, string> = {
-  main: 'Principal',
-  operations: 'Operação & Beleza',
-  finance: 'Financeiro & Salão',
-  settings: 'Ajustes',
-}
-
 export const mobileNavItems = [
   { id: 'mobile-nav-dashboard', label: 'Início', href: '/dashboard', icon: LayoutDashboard },
-  { id: 'mobile-nav-appointments', label: 'Agenda', href: '/appointments', icon: CalendarDays },
-  { id: 'mobile-nav-clients', label: 'Clientes', href: '/clients', icon: Contact2 },
-  { id: 'mobile-nav-services', label: 'Serviços', href: '/services', icon: Sparkles },
-  { id: 'mobile-nav-settings', label: 'Espaço', href: '/settings/organization', icon: Building2 },
+  { id: 'mobile-nav-appointments', label: 'Agenda', href: '/appointments', icon: CalendarDays, requiredPermission: 'appointments:view' as Permission },
+  { id: 'mobile-nav-clients', label: 'Clientes', href: '/clients', icon: Contact2, requiredPermission: 'clients:view' as Permission },
+  { id: 'mobile-nav-services', label: 'Serviços', href: '/services', icon: Sparkles, requiredPermission: 'services:manage' as Permission },
+  { id: 'mobile-nav-settings', label: 'Espaço', href: '/settings/organization', icon: Building2, requiredPermission: 'org:manage' as Permission },
 ]
+
+export { filterNavItemsByRole, navGroupLabels }

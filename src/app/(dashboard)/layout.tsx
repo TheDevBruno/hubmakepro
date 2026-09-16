@@ -1,8 +1,9 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { getActiveOrganizationId } from '@/lib/tenant'
+import { getActiveOrganizationContext } from '@/lib/tenant'
 import { OrgOption } from '@/components/organization-switcher'
 import { AppShell } from '@/components/shell'
+import { UserRole } from '@/lib/rbac'
 
 export default async function DashboardLayout({
   children,
@@ -41,15 +42,19 @@ export default async function DashboardLayout({
       }
     })
 
-  const currentOrgId = await getActiveOrganizationId(supabase) || orgOptions[0]?.id
+  // Resolve o contexto seguro da organização ativa (com proteção contra spoofing)
+  const activeOrgContext = await getActiveOrganizationContext(supabase)
+  const currentOrgId = activeOrgContext?.orgId || orgOptions[0]?.id
   const activeOrg = orgOptions.find((o) => o.id === currentOrgId)
+  const currentRole: UserRole = activeOrgContext?.role || (activeOrg?.role as UserRole) || 'owner'
 
   return (
     <AppShell
       organizations={orgOptions}
       currentOrgId={currentOrgId}
-      currentOrgName={activeOrg?.name}
-      currentOrgSlug={activeOrg?.slug}
+      currentOrgName={activeOrgContext?.orgName || activeOrg?.name}
+      currentOrgSlug={activeOrgContext?.orgSlug || activeOrg?.slug}
+      currentRole={currentRole}
       userEmail={user.email}
       userFullName={profile?.full_name}
     >
@@ -57,4 +62,3 @@ export default async function DashboardLayout({
     </AppShell>
   )
 }
-

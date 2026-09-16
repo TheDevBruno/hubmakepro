@@ -37,9 +37,10 @@ graph TD
 - [x] **Dependencies:** Phase 1 (Design System).
 
 ### Phase 3: Organization Domain & Multi-Tenant Foundation
-- [ ] **Goal:** Fortalecer o isolamento de tenant no banco e no servidor, garantindo validação estrita de permissões (RBAC) e RLS inviolável.
-- [ ] **Deliverables:** Tabela e schema de permissões granulares (`owner`, `admin`, `specialist`, `receptionist`, `financial`), validação estrita em Server Actions e testes de isolamento entre tenants.
-- [ ] **Dependencies:** Nenhuma no backend; integração com Phase 2.
+- [x] **Goal:** Fortalecer o isolamento de tenant no banco e no servidor, garantindo validação estrita de permissões (RBAC) e RLS inviolável.
+- [x] **Deliverables:** Tabela e schema de permissões granulares (`owner`, `admin`, `specialist`, `receptionist`, `financial`), validação estrita em Server Actions e testes de isolamento entre tenants.
+- [x] **Status:** Concluído e testado com 50/50 testes unitários aprovados (`tests/unit/rbac-multi-tenant.test.ts`).
+- [x] **Dependencies:** Nenhuma no backend; integração com Phase 2.
 
 ### Phase 4: Business Type Architecture
 - [ ] **Goal:** Modelar a taxonomia de tipos de negócio de beleza (Salão de Beleza, Lash, Make, Nails, Clínica de Estética, Barbearia) e persistência de metadados.

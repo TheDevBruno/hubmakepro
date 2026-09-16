@@ -5,6 +5,7 @@ import { AppSidebar } from './app-sidebar'
 import { AppHeader } from './app-header'
 import { MobileNav } from './mobile-nav'
 import { OrgOption } from '@/components/organization-switcher'
+import { UserRole } from '@/lib/rbac'
 
 export interface AppShellProps {
   children: React.ReactNode
@@ -12,6 +13,7 @@ export interface AppShellProps {
   currentOrgId?: string
   currentOrgName?: string
   currentOrgSlug?: string
+  currentRole?: UserRole
   userEmail?: string
   userFullName?: string
 }
@@ -22,6 +24,7 @@ export function AppShell({
   currentOrgId,
   currentOrgName,
   currentOrgSlug,
+  currentRole = 'owner',
   userEmail,
   userFullName,
 }: AppShellProps) {
@@ -39,6 +42,7 @@ export function AppShell({
         <AppSidebar
           currentOrgName={currentOrgName}
           currentOrgSlug={currentOrgSlug}
+          currentRole={currentRole}
           isCollapsed={isSidebarCollapsed}
           onToggleCollapse={toggleSidebar}
         />
@@ -60,6 +64,7 @@ export function AppShell({
             <AppSidebar
               currentOrgName={currentOrgName}
               currentOrgSlug={currentOrgSlug}
+              currentRole={currentRole}
               isCollapsed={false}
               onToggleCollapse={() => setIsMobileDrawerOpen(false)}
             />
@@ -85,7 +90,7 @@ export function AppShell({
       </div>
 
       {/* 4. Bottom Navigation Mobile */}
-      <MobileNav />
+      <MobileNav currentRole={currentRole} />
     </div>
   )
 }

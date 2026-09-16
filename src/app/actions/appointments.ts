@@ -1,9 +1,8 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import { getActiveOrganizationId } from '@/lib/tenant'
+import { requireOrgMembership } from '@/lib/auth/authorization'
 
 export type AppointmentActionResult = {
   success: boolean
@@ -12,7 +11,7 @@ export type AppointmentActionResult = {
 }
 
 /**
- * Cria um novo agendamento com cálculo automático de horário de término.
+ * Cria um novo agendamento com cálculo automático de horário de término e validação server-side.
  */
 export async function createAppointmentRecord(formData: FormData): Promise<void> {
   const clientId = formData.get('clientId')?.toString()
@@ -26,18 +25,16 @@ export async function createAppointmentRecord(formData: FormData): Promise<void>
   }
 
   const supabase = await createClient()
-  const currentOrgId = await getActiveOrganizationId(supabase)
 
-  if (!currentOrgId) {
-    console.error('Nenhuma organização ativa identificada ao cadastrar agendamento.')
-    return
-  }
+  // 1. Validação estrita server-side (appointments:manage)
+  const { orgId } = await requireOrgMembership(supabase, null, 'appointments:manage')
 
-  // 1. Busca dados do serviço para saber duração e preço
+  // 2. Busca dados do serviço para saber duração e preço garantindo tenant isolado
   const { data: service, error: serviceError } = await supabase
     .from('services')
     .select('duration_minutes, price_cents')
     .eq('id', serviceId)
+    .eq('organization_id', orgId)
     .single()
 
   if (serviceError || !service) {
@@ -47,11 +44,11 @@ export async function createAppointmentRecord(formData: FormData): Promise<void>
   const startDate = new Date(startTimeRaw)
   const endDate = new Date(startDate.getTime() + service.duration_minutes * 60000)
 
-  // 2. Insere agendamento
+  // 3. Insere agendamento
   const { error } = await supabase
     .from('appointments')
     .insert({
-      organization_id: currentOrgId,
+      organization_id: orgId,
       client_id: clientId,
       specialist_id: specialistId,
       service_id: serviceId,
@@ -87,11 +84,20 @@ export async function updateAppointmentRecord(formData: FormData): Promise<Appoi
 
   const supabase = await createClient()
 
-  // 1. Busca duração e preço atualizado do serviço caso tenha sido alterado
+  let orgId: string
+  try {
+    const authContext = await requireOrgMembership(supabase, null, 'appointments:manage')
+    orgId = authContext.orgId
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Acesso negado.' }
+  }
+
+  // 1. Busca duração e preço atualizado do serviço
   const { data: service, error: serviceError } = await supabase
     .from('services')
     .select('duration_minutes, price_cents')
     .eq('id', serviceId)
+    .eq('organization_id', orgId)
     .single()
 
   if (serviceError || !service) {
@@ -114,6 +120,7 @@ export async function updateAppointmentRecord(formData: FormData): Promise<Appoi
       updated_at: new Date().toISOString(),
     })
     .eq('id', id)
+    .eq('organization_id', orgId) // Garante isolamento de tenant
 
   if (error) {
     return { success: false, message: `Erro ao salvar agendamento: ${error.message}` }
@@ -123,4 +130,3 @@ export async function updateAppointmentRecord(formData: FormData): Promise<Appoi
   revalidatePath('/dashboard')
   return { success: true, message: 'Agendamento atualizado com sucesso!' }
 }
-

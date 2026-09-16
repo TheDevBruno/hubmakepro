@@ -1,9 +1,8 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import { getActiveOrganizationId } from '@/lib/tenant'
+import { requireOrgMembership } from '@/lib/auth/authorization'
 
 export type SpecialistActionResult = {
   success: boolean
@@ -12,7 +11,7 @@ export type SpecialistActionResult = {
 }
 
 /**
- * Cria um novo especialista/profissional.
+ * Cria um novo especialista/profissional com validação server-side (specialists:manage).
  */
 export async function createSpecialist(formData: FormData): Promise<void> {
   const name = formData.get('name')?.toString().trim()
@@ -20,26 +19,18 @@ export async function createSpecialist(formData: FormData): Promise<void> {
   const commissionRate = parseInt(formData.get('commissionRate')?.toString() || '50', 10)
   const specialtiesRaw = formData.getAll('specialties').map((s) => s.toString())
 
-  if (!name || name.length < 2) {
-    return
-  }
-
-  if (isNaN(commissionRate) || commissionRate < 0 || commissionRate > 100) {
-    return
-  }
+  if (!name || name.length < 2) return
+  if (isNaN(commissionRate) || commissionRate < 0 || commissionRate > 100) return
 
   const supabase = await createClient()
-  const currentOrgId = await getActiveOrganizationId(supabase)
 
-  if (!currentOrgId) {
-    console.error('Nenhuma organização ativa identificada ao cadastrar especialista.')
-    return
-  }
+  // 1. Validação estrita server-side
+  const { orgId } = await requireOrgMembership(supabase, null, 'specialists:manage')
 
   const { error } = await supabase
     .from('specialists')
     .insert({
-      organization_id: currentOrgId,
+      organization_id: orgId,
       name,
       phone,
       commission_rate: commissionRate,
@@ -56,7 +47,7 @@ export async function createSpecialist(formData: FormData): Promise<void> {
 }
 
 /**
- * Atualiza os dados de um especialista existente.
+ * Atualiza os dados de um especialista existente com validação server-side.
  */
 export async function updateSpecialist(formData: FormData): Promise<void> {
   const specialistId = formData.get('specialistId')?.toString()
@@ -71,6 +62,9 @@ export async function updateSpecialist(formData: FormData): Promise<void> {
 
   const supabase = await createClient()
 
+  // 1. Validação estrita server-side
+  const { orgId } = await requireOrgMembership(supabase, null, 'specialists:manage')
+
   await supabase
     .from('specialists')
     .update({
@@ -82,6 +76,7 @@ export async function updateSpecialist(formData: FormData): Promise<void> {
       updated_at: new Date().toISOString(),
     })
     .eq('id', specialistId)
+    .eq('organization_id', orgId) // Garante isolamento de tenant
 
   revalidatePath('/specialists')
   revalidatePath('/appointments')

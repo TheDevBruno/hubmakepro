@@ -3,6 +3,8 @@
 import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
+import { requireOrgMembership } from '@/lib/auth/authorization'
+import { UserRole } from '@/lib/rbac'
 
 export type OrgActionResult = {
   success: boolean
@@ -76,7 +78,7 @@ export async function createOrganization(formData: FormData): Promise<OrgActionR
     return { success: false, message: `Erro ao vincular membro: ${memberError.message}` }
   }
 
-  // 3. Define como organização ativa
+  // 4. Define como organização ativa
   const cookieStore = await cookies()
   cookieStore.set('current_org_id', org.id, {
     path: '/',
@@ -90,7 +92,7 @@ export async function createOrganization(formData: FormData): Promise<OrgActionR
 }
 
 /**
- * Alterna a organização ativa armazenada no cookie do usuário.
+ * Alterna a organização ativa armazenada no cookie do usuário com validação de pertencimento.
  */
 export async function switchOrganization(orgId: string): Promise<OrgActionResult> {
   if (!orgId) {
@@ -129,18 +131,19 @@ export async function switchOrganization(orgId: string): Promise<OrgActionResult
 }
 
 /**
- * Convida/adiciona um novo membro à organização pelo ID do perfil.
+ * Convida/adiciona um novo membro à organização pelo ID do perfil com validação server-side (members:manage).
  */
 export async function addMemberToOrg(
   orgId: string,
   userId: string,
-  role: 'admin' | 'member' = 'member'
+  role: UserRole = 'specialist'
 ): Promise<OrgActionResult> {
   const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
 
-  if (!user) {
-    return { success: false, message: 'Não autorizado.' }
+  try {
+    await requireOrgMembership(supabase, orgId, 'members:manage')
+  } catch (err: any) {
+    return { success: false, message: err?.message || 'Acesso negado para gerenciar membros.' }
   }
 
   const { error } = await supabase
@@ -160,7 +163,7 @@ export async function addMemberToOrg(
 }
 
 /**
- * Atualiza os detalhes operacionais do salão / espaço de beleza.
+ * Atualiza os detalhes operacionais do salão / espaço de beleza com validação server-side (org:manage).
  */
 export async function updateOrganizationDetails(formData: FormData): Promise<void> {
   const orgId = formData.get('orgId')?.toString()
@@ -178,12 +181,15 @@ export async function updateOrganizationDetails(formData: FormData): Promise<voi
 
   const supabase = await createClient()
 
-  // 1. Atualiza nome da organização se alterado
+  // 1. Validação estrita server-side (org:manage)
+  await requireOrgMembership(supabase, orgId, 'org:manage')
+
+  // 2. Atualiza nome da organização se alterado
   if (name && name.length >= 2) {
     await supabase.from('organizations').update({ name, updated_at: new Date().toISOString() }).eq('id', orgId)
   }
 
-  // 2. Upsert nas configurações do tenant
+  // 3. Upsert nas configurações do tenant
   await supabase
     .from('organization_settings')
     .upsert({

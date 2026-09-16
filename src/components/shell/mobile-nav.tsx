@@ -3,10 +3,17 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { mobileNavItems } from '@/lib/design-system/navigation'
+import { mobileNavItems, filterNavItemsByRole } from '@/lib/design-system/navigation'
+import { UserRole } from '@/lib/rbac'
 
-export function MobileNav() {
+export interface MobileNavProps {
+  currentRole?: UserRole
+}
+
+export function MobileNav({ currentRole = 'owner' }: MobileNavProps) {
   const pathname = usePathname()
+
+  const allowedMobileItems = filterNavItemsByRole(mobileNavItems, currentRole)
 
   return (
     <nav
@@ -14,7 +21,7 @@ export function MobileNav() {
       aria-label="Navegação Rápida Mobile"
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-[#0c1220]/95 backdrop-blur-md border-t border-slate-800 px-2 py-1.5 flex items-center justify-around shadow-2xl safe-area-bottom select-none"
     >
-      {mobileNavItems.map((item) => {
+      {allowedMobileItems.map((item) => {
         const Icon = item.icon
         const isActive = pathname === item.href
 

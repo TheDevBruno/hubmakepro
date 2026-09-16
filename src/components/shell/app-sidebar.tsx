@@ -3,12 +3,14 @@
 import React from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { navigationConfig, navGroupLabels, NavItem } from '@/lib/design-system/navigation'
+import { navigationConfig, navGroupLabels, filterNavItemsByRole } from '@/lib/design-system/navigation'
 import { Globe2, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-react'
+import { UserRole } from '@/lib/rbac'
 
 export interface AppSidebarProps {
   currentOrgName?: string
   currentOrgSlug?: string
+  currentRole?: UserRole
   isCollapsed: boolean
   onToggleCollapse: () => void
 }
@@ -16,6 +18,7 @@ export interface AppSidebarProps {
 export function AppSidebar({
   currentOrgName,
   currentOrgSlug,
+  currentRole = 'owner',
   isCollapsed,
   onToggleCollapse,
 }: AppSidebarProps) {
@@ -27,6 +30,9 @@ export function AppSidebar({
     'finance',
     'settings',
   ]
+
+  // Filtra itens de acordo com o papel do usuário na organização ativa
+  const allowedNavItems = filterNavItemsByRole(navigationConfig, currentRole)
 
   return (
     <aside
@@ -97,7 +103,7 @@ export function AppSidebar({
         {/* Navigation Sections */}
         <nav id="sidebar-primary-nav" className="space-y-4" aria-label="Navegação Principal">
           {groups.map((group) => {
-            const items = navigationConfig.filter((item) => item.group === group)
+            const items = allowedNavItems.filter((item) => item.group === group)
             if (items.length === 0) return null
 
             return (

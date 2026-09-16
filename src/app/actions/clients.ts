@@ -1,9 +1,8 @@
 'use server'
 
-import { cookies } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
-import { getActiveOrganizationId } from '@/lib/tenant'
+import { requireOrgMembership } from '@/lib/auth/authorization'
 
 export type ClientActionResult = {
   success: boolean
@@ -12,7 +11,7 @@ export type ClientActionResult = {
 }
 
 /**
- * Cria um novo cliente associado à organização ativa.
+ * Cria um novo cliente associado à organização ativa com validação server-side.
  */
 export async function createClientRecord(formData: FormData): Promise<void> {
   const name = formData.get('name')?.toString().trim()
@@ -36,26 +35,18 @@ export async function createClientRecord(formData: FormData): Promise<void> {
     ...(nailTechnique && { nailTechnique }),
   }
 
-  if (!name || name.length < 2) {
-    return
-  }
-
-  if (!phone || phone.length < 8) {
-    return
-  }
+  if (!name || name.length < 2) return
+  if (!phone || phone.length < 8) return
 
   const supabase = await createClient()
-  const currentOrgId = await getActiveOrganizationId(supabase)
 
-  if (!currentOrgId) {
-    console.error('Nenhuma organização ativa identificada ao cadastrar cliente.')
-    return
-  }
+  // 1. Validação estrita server-side (clients:manage)
+  const { orgId } = await requireOrgMembership(supabase, null, 'clients:manage')
 
   const { error } = await supabase
     .from('clients')
     .insert({
-      organization_id: currentOrgId,
+      organization_id: orgId,
       name,
       phone,
       email,
@@ -74,7 +65,7 @@ export async function createClientRecord(formData: FormData): Promise<void> {
 }
 
 /**
- * Atualiza os dados cadastrais e a ficha de anamnese do cliente.
+ * Atualiza os dados cadastrais e a ficha de anamnese do cliente com validação server-side.
  */
 export async function updateClientRecord(formData: FormData): Promise<void> {
   const clientId = formData.get('clientId')?.toString()
@@ -104,6 +95,9 @@ export async function updateClientRecord(formData: FormData): Promise<void> {
 
   const supabase = await createClient()
 
+  // 1. Validação estrita server-side
+  const { orgId } = await requireOrgMembership(supabase, null, 'clients:manage')
+
   await supabase
     .from('clients')
     .update({
@@ -116,6 +110,7 @@ export async function updateClientRecord(formData: FormData): Promise<void> {
       updated_at: new Date().toISOString(),
     })
     .eq('id', clientId)
+    .eq('organization_id', orgId) // Garante isolamento de tenant
 
   revalidatePath('/clients')
   revalidatePath('/appointments')
