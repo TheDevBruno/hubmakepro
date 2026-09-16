@@ -31,9 +31,10 @@ graph TD
 - [x] **Dependencies:** Nenhuma (Fundação pura).
 
 ### Phase 2: Application Shell & Responsive Navigation
-- [ ] **Goal:** Construir o Shell moderno da aplicação com navegação responsiva (Sidebar colapsável, Header dinâmico, Bottom Bar mobile e suporte a módulos dinâmicos).
-- [ ] **Deliverables:** Layout principal refatorado, navegação adaptativa por permissão/módulo e seletor rápido de organização com transições suaves.
-- [ ] **Dependencies:** Phase 1 (Design System).
+- [x] **Goal:** Construir o Shell moderno da aplicação com navegação responsiva (Sidebar colapsável, Header dinâmico, Bottom Bar mobile e suporte a módulos dinâmicos).
+- [x] **Deliverables:** Layout principal refatorado, navegação adaptativa por permissão/módulo e seletor rápido de organização com transições suaves.
+- [x] **Status:** Concluído e testado com 39/39 testes unitários aprovados (`tests/unit/app-shell.test.ts`).
+- [x] **Dependencies:** Phase 1 (Design System).
 
 ### Phase 3: Organization Domain & Multi-Tenant Foundation
 - [ ] **Goal:** Fortalecer o isolamento de tenant no banco e no servidor, garantindo validação estrita de permissões (RBAC) e RLS inviolável.
