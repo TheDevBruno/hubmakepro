@@ -25,9 +25,10 @@ graph TD
 ---
 
 ### Phase 1: Design System Foundation
-- [ ] **Goal:** Estabelecer a infraestrutura visual centralizada (Design Tokens HSL, tipografia, paleta temática, elevações e componentes atômicos com 5 estados obrigatórios: default, loading, empty, error, success).
-- [ ] **Deliverables:** `design-system.ts`, tokens CSS, componentes base (`Button`, `Input`, `Select`, `Card`, `Badge`, `Modal`, `EmptyState`, `Alert`), acessibilidade WCAG 2.1 AA e suite de testes de componentes.
-- [ ] **Dependencies:** Nenhuma (Fundação pura).
+- [x] **Goal:** Estabelecer a infraestrutura visual centralizada (Design Tokens HSL, tipografia, paleta temática, elevações e componentes atômicos com 5 estados obrigatórios: default, loading, empty, error, success).
+- [x] **Deliverables:** `design-system.ts`, tokens CSS, componentes base (`Button`, `Input`, `Select`, `Card`, `Badge`, `Modal`, `EmptyState`, `Alert`), acessibilidade WCAG 2.1 AA e suite de testes de componentes.
+- [x] **Status:** Concluído e testado com 35/35 testes unitários aprovados.
+- [x] **Dependencies:** Nenhuma (Fundação pura).
 
 ### Phase 2: Application Shell & Responsive Navigation
 - [ ] **Goal:** Construir o Shell moderno da aplicação com navegação responsiva (Sidebar colapsável, Header dinâmico, Bottom Bar mobile e suporte a módulos dinâmicos).
