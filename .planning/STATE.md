@@ -5,7 +5,7 @@
 ### Status Atual
 - **Marco Ativo:** `v2.0` (Iniciado)
 - **Fase Atual:** `Phase 1` (Design System Foundation)
-- **Status da Fase:** Pronta para planejamento detalhado (`/gsd-plan-phase 1`)
+- **Status da Fase:** Plano criado e pronto para execução (`/gsd-execute-phase 1`)
  
 ---
  
