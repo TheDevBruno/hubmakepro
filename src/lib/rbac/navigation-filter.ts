@@ -1,4 +1,6 @@
-import { UserRole, Permission, hasPermission } from './permissions'
+import type { UserRole } from './roles'
+import type { Permission } from './permissions'
+import { hasPermission } from './permissions'
 
 export interface BaseNavItem {
   id: string
