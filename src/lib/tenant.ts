@@ -1,11 +1,14 @@
 import { cookies } from 'next/headers'
 import { SupabaseClient, User } from '@supabase/supabase-js'
 import { UserRole } from '@/lib/rbac'
+import { BusinessType, getBusinessType, BusinessTypeDefinition } from '@/lib/business-types'
 
 export interface ActiveOrganizationContext {
   orgId: string
   orgName: string
   orgSlug: string
+  businessType: BusinessType
+  businessTypeInfo: BusinessTypeDefinition
   role: UserRole
   user: User
 }
@@ -65,7 +68,7 @@ export async function getActiveOrganizationId(supabase: SupabaseClient): Promise
 }
 
 /**
- * Retorna o contexto completo da organização ativa (ID, Dados da Org, Papel do Usuário e Sessão).
+ * Retorna o contexto completo da organização ativa (ID, Dados da Org, Business Type, Papel do Usuário e Sessão).
  */
 export async function getActiveOrganizationContext(supabase: SupabaseClient): Promise<ActiveOrganizationContext | null> {
   const { data: { user } } = await supabase.auth.getUser()
@@ -76,7 +79,7 @@ export async function getActiveOrganizationContext(supabase: SupabaseClient): Pr
 
   const { data: membership } = await supabase
     .from('organization_members')
-    .select('role, organizations(id, name, slug)')
+    .select('role, organizations(id, name, slug, business_type)')
     .eq('organization_id', orgId)
     .eq('user_id', user.id)
     .single()
@@ -84,11 +87,14 @@ export async function getActiveOrganizationContext(supabase: SupabaseClient): Pr
   if (!membership || !membership.organizations) return null
 
   const org = Array.isArray(membership.organizations) ? membership.organizations[0] : membership.organizations
+  const businessTypeDefinition = getBusinessType(org.business_type)
 
   return {
     orgId: org.id,
     orgName: org.name,
     orgSlug: org.slug,
+    businessType: businessTypeDefinition.id,
+    businessTypeInfo: businessTypeDefinition,
     role: (membership.role as UserRole) || 'specialist',
     user,
   }

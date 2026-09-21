@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { requireOrgMembership } from '@/lib/auth/authorization'
 import { UserRole } from '@/lib/rbac'
+import { BusinessType, isValidBusinessType } from '@/lib/business-types'
 
 export type OrgActionResult = {
   success: boolean
@@ -26,12 +27,20 @@ function slugify(text: string): string {
 
 /**
  * Cria uma nova organização e associa o criador como 'owner'.
+ * Valida estritamente o BusinessType com isValidBusinessType() antes de persistir.
  */
 export async function createOrganization(formData: FormData): Promise<OrgActionResult> {
   const name = formData.get('name')?.toString().trim()
+  const rawBusinessType = formData.get('businessType')?.toString().trim()
+
   if (!name || name.length < 2) {
     return { success: false, message: 'O nome da organização deve ter no mínimo 2 caracteres.' }
   }
+
+  // Validação estrita do BusinessType (sem aceitar strings arbitrárias)
+  const businessType: BusinessType = isValidBusinessType(rawBusinessType)
+    ? rawBusinessType
+    : 'beauty_salon'
 
   const supabase = await createClient()
   const { data: { user }, error: authError } = await supabase.auth.getUser()
@@ -43,12 +52,13 @@ export async function createOrganization(formData: FormData): Promise<OrgActionR
   const baseSlug = slugify(name)
   const uniqueSlug = `${baseSlug}-${Math.random().toString(36).substring(2, 7)}`
 
-  // 1. Criar organização
+  // 1. Criar organização com business_type validado
   const { data: org, error: orgError } = await supabase
     .from('organizations')
     .insert({
       name,
       slug: uniqueSlug,
+      business_type: businessType,
     })
     .select('id')
     .single()

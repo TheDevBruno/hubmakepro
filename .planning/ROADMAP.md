@@ -43,9 +43,10 @@ graph TD
 - [x] **Dependencies:** Nenhuma no backend; integração com Phase 2.
 
 ### Phase 4: Business Type Architecture
-- [ ] **Goal:** Modelar a taxonomia de tipos de negócio de beleza (Salão de Beleza, Lash, Make, Nails, Clínica de Estética, Barbearia) e persistência de metadados.
-- [ ] **Deliverables:** Tabela/Enum `business_types`, schema tipado em TypeScript, catálogo descritivo e endpoints de consulta de metadados.
-- [ ] **Dependencies:** Phase 3.
+- [x] **Goal:** Modelar a taxonomia de tipos de negócio de beleza (Salão de Beleza, Lash, Make, Nails, Clínica de Estética, Barbearia) e persistência de metadados.
+- [x] **Deliverables:** Tabela/Enum `business_types`, schema tipado em TypeScript, catálogo descritivo e endpoints de consulta de metadados.
+- [x] **Status:** Concluído e testado com 57/57 testes unitários aprovados (`tests/unit/business-types.test.ts`).
+- [x] **Dependencies:** Phase 3.
 
 ### Phase 5: Business Templates Engine
 - [ ] **Goal:** Criar o motor de templates pré-configurados que injetam serviços sugeridos, estrutura de ficha de anamnese e configurações recomendadas para cada tipo de negócio.
